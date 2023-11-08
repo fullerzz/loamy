@@ -19,20 +19,26 @@ class RequestResponse(msgspec.Struct):
     responseBody: Optional[dict] = None
 
 
+class RequestResults(msgspec.Struct):
+    requestResponses: List[RequestResponse] = []
+    taskExceptions: List[BaseException] = []
+
+
 class zSession:
     def __init__(self, requestMaps: List[RequestMap]) -> None:
-        self._requestMaps = requestMaps
+        self._requestMaps: List[RequestMap] = requestMaps
 
-    def sendRequests(self) -> List[RequestResponse]:
-        return uvloop.run(self._sendRequests())
+    def sendRequests(self, return_exceptions: bool = False) -> Dict[str, list]:
+        return uvloop.run(self._sendRequests(rtn_exc=return_exceptions))
 
-    async def _sendRequests(self) -> List[RequestResponse]:
+    async def _sendRequests(self, rtn_exc: bool) -> Dict[str, list]:
         async with aiohttp.ClientSession() as session:
             httpTasks: List[asyncio.Task] = []
             for req in self._requestMaps:
                 httpTasks.append(asyncio.ensure_future(self._routeIndividualRequest(req, session)))
-            responses: List[RequestResponse] = await asyncio.gather(*httpTasks)
-            return responses
+            responses: List[RequestResponse | BaseException] = await asyncio.gather(*httpTasks, return_exceptions=rtn_exc)
+            requestResults: RequestResults = await _processResults(taskResults=responses)
+            return requestResults.__dict__
 
     async def _routeIndividualRequest(self, reqMap: RequestMap, session: aiohttp.ClientSession) -> RequestResponse:
         requestResponse: RequestResponse = RequestResponse(requestMap=reqMap, statusCode=0)
@@ -71,3 +77,14 @@ class zSession:
             responseBody = await resp.json()
         reqResponse = RequestResponse(requestMap=reqMap, statusCode=statusCode, responseBody=responseBody)
         return reqResponse
+
+
+async def _processResults(taskResults: List[RequestResponse | BaseException]) -> RequestResults:
+    responses: List[RequestResponse] = []
+    taskExceptions: List[BaseException] = []
+    for result in taskResults:
+        if isinstance(result, BaseException):
+            taskExceptions.append(result)
+        else:
+            responses.append(result)
+    return RequestResults(requestResponses=responses, taskExceptions=taskExceptions)
