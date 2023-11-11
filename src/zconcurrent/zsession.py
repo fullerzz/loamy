@@ -2,6 +2,7 @@ import asyncio
 import aiohttp
 import uvloop
 import msgspec
+from dataclasses import dataclass
 from typing import Dict, List, Literal, Optional
 
 
@@ -19,19 +20,20 @@ class RequestResponse(msgspec.Struct):
     responseBody: Optional[dict] = None
 
 
-class RequestResults(msgspec.Struct):
-    requestResponses: List[RequestResponse] = []
-    taskExceptions: List[BaseException] = []
+@dataclass
+class RequestResults:
+    requestResponses: List[RequestResponse]
+    taskExceptions: List[BaseException]
 
 
 class zSession:
     def __init__(self, requestMaps: List[RequestMap]) -> None:
         self._requestMaps: List[RequestMap] = requestMaps
 
-    def sendRequests(self, return_exceptions: bool = False) -> Dict[str, list]:
+    def sendRequests(self, return_exceptions: bool = False) -> RequestResults:
         return uvloop.run(self._sendRequests(rtn_exc=return_exceptions))
 
-    async def _sendRequests(self, rtn_exc: bool) -> Dict[str, list]:
+    async def _sendRequests(self, rtn_exc: bool) -> RequestResults:
         async with aiohttp.ClientSession() as session:
             httpTasks: List[asyncio.Task] = []
             for req in self._requestMaps:
@@ -44,7 +46,7 @@ class zSession:
             requestResults: RequestResults = await _processResults(
                 taskResults=responses
             )
-            return msgspec.to_builtins(requestResults)
+            return requestResults
 
     async def _routeIndividualRequest(
         self, reqMap: RequestMap, session: aiohttp.ClientSession
@@ -58,13 +60,13 @@ class zSession:
             case "POST":
                 requestResponse = await self._sendGetRequest(reqMap, session)
             case "PUT":
-                raise NotImplementedError
+                requestResponse = await self._sendPutRequest(reqMap, session)
             case "PATCH":
-                raise NotImplementedError
+                requestResponse = await self._sendPatchRequest(reqMap, session)
             case "OPTIONS":
-                raise NotImplementedError
+                requestResponse = await self._sendOptionsRequest(reqMap, session)
             case "DELETE":
-                raise NotImplementedError
+                requestResponse = await self._sendDeleteRequest(reqMap, session)
             case _:
                 pass
 
@@ -87,6 +89,70 @@ class zSession:
         self, reqMap: RequestMap, session: aiohttp.ClientSession
     ) -> RequestResponse:
         async with session.post(
+            reqMap.url,
+            json=reqMap.body,
+            headers=reqMap.headers,
+            params=reqMap.queryParams,
+        ) as resp:
+            statusCode: int = resp.status
+            responseBody = await resp.json()
+        reqResponse = RequestResponse(
+            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+        )
+        return reqResponse
+
+    async def _sendPutRequest(
+        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    ) -> RequestResponse:
+        async with session.put(
+            reqMap.url,
+            json=reqMap.body,
+            headers=reqMap.headers,
+            params=reqMap.queryParams,
+        ) as resp:
+            statusCode: int = resp.status
+            responseBody = await resp.json()
+        reqResponse = RequestResponse(
+            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+        )
+        return reqResponse
+
+    async def _sendPatchRequest(
+        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    ) -> RequestResponse:
+        async with session.patch(
+            reqMap.url,
+            json=reqMap.body,
+            headers=reqMap.headers,
+            params=reqMap.queryParams,
+        ) as resp:
+            statusCode: int = resp.status
+            responseBody = await resp.json()
+        reqResponse = RequestResponse(
+            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+        )
+        return reqResponse
+
+    async def _sendOptionsRequest(
+        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    ) -> RequestResponse:
+        async with session.options(
+            reqMap.url,
+            json=reqMap.body,
+            headers=reqMap.headers,
+            params=reqMap.queryParams,
+        ) as resp:
+            statusCode: int = resp.status
+            responseBody = await resp.json()
+        reqResponse = RequestResponse(
+            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+        )
+        return reqResponse
+
+    async def _sendDeleteRequest(
+        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    ) -> RequestResponse:
+        async with session.delete(
             reqMap.url,
             json=reqMap.body,
             headers=reqMap.headers,
