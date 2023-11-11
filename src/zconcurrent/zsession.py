@@ -44,7 +44,7 @@ class zSession:
             requestResults: RequestResults = await _processResults(
                 taskResults=responses
             )
-            return requestResults.__dict__
+            return msgspec.to_builtins(requestResults)
 
     async def _routeIndividualRequest(
         self, reqMap: RequestMap, session: aiohttp.ClientSession
@@ -76,7 +76,6 @@ class zSession:
         async with session.get(
             reqMap.url, headers=reqMap.headers, params=reqMap.queryParams
         ) as resp:
-            print(resp.status)
             statusCode: int = resp.status
             responseBody = await resp.json()
         reqResponse = RequestResponse(
@@ -93,7 +92,6 @@ class zSession:
             headers=reqMap.headers,
             params=reqMap.queryParams,
         ) as resp:
-            print(resp.status)
             statusCode: int = resp.status
             responseBody = await resp.json()
         reqResponse = RequestResponse(
