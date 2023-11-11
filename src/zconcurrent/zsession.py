@@ -35,13 +35,23 @@ class zSession:
         async with aiohttp.ClientSession() as session:
             httpTasks: List[asyncio.Task] = []
             for req in self._requestMaps:
-                httpTasks.append(asyncio.ensure_future(self._routeIndividualRequest(req, session)))
-            responses: List[RequestResponse | BaseException] = await asyncio.gather(*httpTasks, return_exceptions=rtn_exc)
-            requestResults: RequestResults = await _processResults(taskResults=responses)
-            return requestResults.__dict__
+                httpTasks.append(
+                    asyncio.ensure_future(self._routeIndividualRequest(req, session))
+                )
+            responses: List[RequestResponse | BaseException] = await asyncio.gather(
+                *httpTasks, return_exceptions=rtn_exc
+            )
+            requestResults: RequestResults = await _processResults(
+                taskResults=responses
+            )
+            return msgspec.to_builtins(requestResults)
 
-    async def _routeIndividualRequest(self, reqMap: RequestMap, session: aiohttp.ClientSession) -> RequestResponse:
-        requestResponse: RequestResponse = RequestResponse(requestMap=reqMap, statusCode=0)
+    async def _routeIndividualRequest(
+        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    ) -> RequestResponse:
+        requestResponse: RequestResponse = RequestResponse(
+            requestMap=reqMap, statusCode=0
+        )
         match reqMap.httpOperation:
             case "GET":
                 requestResponse = await self._sendGetRequest(reqMap, session)
@@ -60,26 +70,39 @@ class zSession:
 
         return requestResponse
 
-    async def _sendGetRequest(self, reqMap: RequestMap, session: aiohttp.ClientSession) -> RequestResponse:
-        async with session.get(reqMap.url, headers=reqMap.headers, params=reqMap.queryParams) as resp:
-            print(resp.status)
-            statusCode: int = resp.status
-            responseBody = await resp.json()
-        reqResponse = RequestResponse(requestMap=reqMap, statusCode=statusCode, responseBody=responseBody)
-        return reqResponse
-
-    async def _sendPostRequest(self, reqMap: RequestMap, session: aiohttp.ClientSession) -> RequestResponse:
-        async with session.post(
-            reqMap.url, json=reqMap.body, headers=reqMap.headers, params=reqMap.queryParams
+    async def _sendGetRequest(
+        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    ) -> RequestResponse:
+        async with session.get(
+            reqMap.url, headers=reqMap.headers, params=reqMap.queryParams
         ) as resp:
-            print(resp.status)
             statusCode: int = resp.status
             responseBody = await resp.json()
-        reqResponse = RequestResponse(requestMap=reqMap, statusCode=statusCode, responseBody=responseBody)
+        reqResponse = RequestResponse(
+            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+        )
+        return reqResponse
+
+    async def _sendPostRequest(
+        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    ) -> RequestResponse:
+        async with session.post(
+            reqMap.url,
+            json=reqMap.body,
+            headers=reqMap.headers,
+            params=reqMap.queryParams,
+        ) as resp:
+            statusCode: int = resp.status
+            responseBody = await resp.json()
+        reqResponse = RequestResponse(
+            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+        )
         return reqResponse
 
 
-async def _processResults(taskResults: List[RequestResponse | BaseException]) -> RequestResults:
+async def _processResults(
+    taskResults: List[RequestResponse | BaseException]
+) -> RequestResults:
     responses: List[RequestResponse] = []
     taskExceptions: List[BaseException] = []
     for result in taskResults:
