@@ -52,7 +52,7 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I", "N", "UP", "ASYNC"]
-ignore = []
+ignore = ["N815", "N816", "N801", "N803", "N802"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
