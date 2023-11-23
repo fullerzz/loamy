@@ -1,9 +1,10 @@
 import asyncio
-import aiohttp
-import uvloop
-import msgspec
 from dataclasses import dataclass
 from typing import Dict, List, Literal, Optional
+
+import aiohttp
+import msgspec
+import uvloop
 
 
 class RequestMap(msgspec.Struct):
