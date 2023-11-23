@@ -1,8 +1,9 @@
+from typing import Any
+
 from src.zconcurrent.zsession import RequestMap
-from typing import Any, Dict
 
 
-def test_valid_RequestMap(base_config: Dict[str, Any]):
+def test_valid_RequestMap(base_config: dict[str, Any]):
     requestMap = RequestMap(
         url=base_config["url"],
         httpOperation="GET",
