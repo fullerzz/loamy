@@ -1,9 +1,10 @@
+from typing import Any
+
 import pytest
-from typing import Any, Dict
 
 
 @pytest.fixture
-def base_config() -> Dict[str, Any]:
+def base_config() -> dict[str, Any]:
     return {
         "url": "https://google.com",
         "body": {"data": "content"},
