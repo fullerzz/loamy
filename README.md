@@ -18,4 +18,35 @@ pip install zconcurrent
 
 ## Usage
 
-*To do*
+The package can be imported as shown:
+
+```python
+from zconcurrent.zsession import zSession, RequestMap, RequestResults
+```
+
+| Class | Description|
+| ----- | -----------|
+| `zSession` | Session object containing collection of requests to send |
+| `RequestMap` | Container object that stores all info about an individual request to send |
+| `RequestResults` | Container object that stores the request responses and any exceptions raised |
+
+
+### Example
+
+```python
+req1 = RequestMap(url="https://baconipsum.com/api", httpOperation="GET", queryParams={"type": "meat-and-filler", "format": "json"})
+req2 = RequestMap(url="https://baconipsum.com/api", httpOperation="GET", queryParams={"type": "all-meat", "format": "json"})
+req3 = RequestMap(url="https://baconipsum.com/api", httpOperation="GET", queryParams={"type": "meat-and-filler", "format": "json"})
+
+session = zSession(requestMaps=[req1, req2, req3])
+reqResps: RequestResults = mySession.sendRequests()
+```
+
+### RequestResults Class
+
+```python
+@dataclass
+class RequestResults:
+    requestResponses: list[RequestResponse]
+    taskExceptions: list[BaseException]
+```
