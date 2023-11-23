@@ -42,11 +42,46 @@ session = zSession(requestMaps=[req1, req2, req3])
 reqResps: RequestResults = mySession.sendRequests()
 ```
 
-### RequestResults Class
+#### RequestMap Class
+
+```python
+class RequestMap(msgspec.Struct):
+    url: str
+    httpOperation: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
+    body: dict | None = None
+    queryParams: dict[str, str] | None = None
+    headers: dict[str, str] | None = None
+```
+
+
+#### RequestResponse Class
+
+```python
+class RequestResponse(msgspec.Struct):
+    requestMap: RequestMap
+    statusCode: int
+    responseBody: dict | None = None
+```
+
+#### RequestResults Class
 
 ```python
 @dataclass
 class RequestResults:
     requestResponses: list[RequestResponse]
     taskExceptions: list[BaseException]
+```
+
+### Parsing Results
+
+```python
+if len(reqResps.taskExceptions) > 0:
+    print("Handling exceptions")
+
+for resp in requestResponses:
+    httpVerb = resp.requestMap.httpOperation
+    print(f"Evaluating response for {httpVerb} request to {resp.requestMap.url}")
+    print(f"Status Code: {resp.statusCode}")
+    if resp.responseBody is not None:
+        print(resp.responseBody)
 ```
