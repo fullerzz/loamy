@@ -1,6 +1,6 @@
 import asyncio
 from dataclasses import dataclass
-from typing import Dict, List, Literal, Optional
+from typing import Literal
 
 import aiohttp
 import msgspec
@@ -10,38 +10,38 @@ import uvloop
 class RequestMap(msgspec.Struct):
     url: str
     httpOperation: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
-    body: Optional[dict] = None
-    queryParams: Optional[Dict[str, str]] = None
-    headers: Optional[Dict[str, str]] = None
+    body: dict | None = None
+    queryParams: dict[str, str] | None = None
+    headers: dict[str, str] | None = None
 
 
 class RequestResponse(msgspec.Struct):
     requestMap: RequestMap
     statusCode: int
-    responseBody: Optional[dict] = None
+    responseBody: dict | None = None
 
 
 @dataclass
 class RequestResults:
-    requestResponses: List[RequestResponse]
-    taskExceptions: List[BaseException]
+    requestResponses: list[RequestResponse]
+    taskExceptions: list[BaseException]
 
 
 class zSession:
-    def __init__(self, requestMaps: List[RequestMap]) -> None:
-        self._requestMaps: List[RequestMap] = requestMaps
+    def __init__(self, requestMaps: list[RequestMap]) -> None:
+        self._requestMaps: list[RequestMap] = requestMaps
 
     def sendRequests(self, return_exceptions: bool = False) -> RequestResults:
         return uvloop.run(self._sendRequests(rtn_exc=return_exceptions))
 
     async def _sendRequests(self, rtn_exc: bool) -> RequestResults:
         async with aiohttp.ClientSession() as session:
-            httpTasks: List[asyncio.Task] = []
+            httpTasks: list[asyncio.Task] = []
             for req in self._requestMaps:
                 httpTasks.append(
                     asyncio.ensure_future(self._routeIndividualRequest(req, session))
                 )
-            responses: List[RequestResponse | BaseException] = await asyncio.gather(
+            responses: list[RequestResponse | BaseException] = await asyncio.gather(
                 *httpTasks, return_exceptions=rtn_exc
             )
             requestResults: RequestResults = await _processResults(
@@ -168,10 +168,10 @@ class zSession:
 
 
 async def _processResults(
-    taskResults: List[RequestResponse | BaseException]
+    taskResults: list[RequestResponse | BaseException]
 ) -> RequestResults:
-    responses: List[RequestResponse] = []
-    taskExceptions: List[BaseException] = []
+    responses: list[RequestResponse] = []
+    taskExceptions: list[BaseException] = []
     for result in taskResults:
         if isinstance(result, BaseException):
             taskExceptions.append(result)
