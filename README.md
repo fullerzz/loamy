@@ -34,12 +34,38 @@ from zconcurrent.zsession import zSession, RequestMap, RequestResults
 ### Example
 
 ```python
-req1 = RequestMap(url="https://baconipsum.com/api", httpOperation="GET", queryParams={"type": "meat-and-filler", "format": "json"})
-req2 = RequestMap(url="https://baconipsum.com/api", httpOperation="GET", queryParams={"type": "all-meat", "format": "json"})
-req3 = RequestMap(url="https://baconipsum.com/api", httpOperation="GET", queryParams={"type": "meat-and-filler", "format": "json"})
+# Create RequestMap objects
+req1 = RequestMap(
+    url="https://baconipsum.com/api",
+    httpOperation="GET",
+    queryParams={"type": "meat-and-filler", "format": "json"},
+)
+req2 = RequestMap(
+    url="https://baconipsum.com/api",
+    httpOperation="GET",
+    queryParams={"type": "all-meat", "format": "json"},
+)
+req3 = RequestMap(
+    url="https://baconipsum.com/api",
+    httpOperation="GET",
+    queryParams={"type": "meat-and-filler", "format": "json"},
+)
 
+# Create zSession and call sendRequests()
 session = zSession(requestMaps=[req1, req2, req3])
-reqResps: RequestResults = mySession.sendRequests()
+reqResps: RequestResults = sesion.sendRequests()
+
+# Handle exceptions raised for individual requests
+if len(reqResps.taskExceptions) > 0:
+    print("Handling exceptions")
+
+# Handle responses for individual requests
+for resp in requestResponses:
+    httpVerb = resp.requestMap.httpOperation
+    print(f"Evaluating response for {httpVerb} request to {resp.requestMap.url}")
+    print(f"Status Code: {resp.statusCode}")
+    if resp.responseBody is not None:
+        print(resp.responseBody)
 ```
 
 #### RequestMap Class
@@ -70,18 +96,4 @@ class RequestResponse(msgspec.Struct):
 class RequestResults:
     requestResponses: list[RequestResponse]
     taskExceptions: list[BaseException]
-```
-
-### Parsing Results
-
-```python
-if len(reqResps.taskExceptions) > 0:
-    print("Handling exceptions")
-
-for resp in requestResponses:
-    httpVerb = resp.requestMap.httpOperation
-    print(f"Evaluating response for {httpVerb} request to {resp.requestMap.url}")
-    print(f"Status Code: {resp.statusCode}")
-    if resp.responseBody is not None:
-        print(resp.responseBody)
 ```
