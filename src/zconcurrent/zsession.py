@@ -4,7 +4,13 @@ from typing import Literal
 
 import aiohttp
 import msgspec
-import uvloop
+
+try:
+    import uvloop
+
+    asyncRun = uvloop.run
+except ModuleNotFoundError:
+    asyncRun = asyncio.run
 
 
 class RequestMap(msgspec.Struct):
@@ -32,7 +38,7 @@ class zSession:
         self._requestMaps: list[RequestMap] = requestMaps
 
     def sendRequests(self, return_exceptions: bool = False) -> RequestResults:
-        return uvloop.run(self._sendRequests(rtn_exc=return_exceptions))
+        return asyncRun(self._sendRequests(rtn_exc=return_exceptions))
 
     async def _sendRequests(self, rtn_exc: bool) -> RequestResults:
         async with aiohttp.ClientSession() as session:
