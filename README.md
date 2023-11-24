@@ -6,11 +6,11 @@
 
 This project allows you to execute a list of http operations asynchronously from within an synchronous context.
 
-It does not care whether you should do this. It simply allows you to do so if you so desire.
+It does not care whether you should do this. It simply allows you to do so if you desire.
 
 ## Installing
 
-The package is available via pip. (Soon)
+The package is available via pip.
 
 ```bash
 pip install zconcurrent

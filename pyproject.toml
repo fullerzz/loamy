@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zconcurrent"
-version = "0.0.2"
+version = "0.0.1"
 description = ""
 authors = ["Zach Fuller <zach.fuller1222@gmail.com>"]
 readme = "README.md"
