@@ -4,7 +4,13 @@ from typing import Literal
 
 import aiohttp
 import msgspec
-import uvloop
+
+try:
+    import uvloop
+
+    asyncRun = uvloop.run
+except ModuleNotFoundError:
+    asyncRun = asyncio.run
 
 
 class RequestMap(msgspec.Struct):
@@ -18,7 +24,7 @@ class RequestMap(msgspec.Struct):
 class RequestResponse(msgspec.Struct):
     requestMap: RequestMap
     statusCode: int
-    responseBody: dict | None = None
+    body: dict | None = None
 
 
 @dataclass
@@ -32,7 +38,7 @@ class zSession:
         self._requestMaps: list[RequestMap] = requestMaps
 
     def sendRequests(self, return_exceptions: bool = False) -> RequestResults:
-        return uvloop.run(self._sendRequests(rtn_exc=return_exceptions))
+        return asyncRun(self._sendRequests(rtn_exc=return_exceptions))
 
     async def _sendRequests(self, rtn_exc: bool) -> RequestResults:
         async with aiohttp.ClientSession() as session:
@@ -80,9 +86,9 @@ class zSession:
             reqMap.url, headers=reqMap.headers, params=reqMap.queryParams
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -96,9 +102,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -112,9 +118,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -128,9 +134,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -144,9 +150,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -160,9 +166,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
