@@ -64,8 +64,8 @@ for resp in requestResponses:
     httpVerb = resp.requestMap.httpOperation
     print(f"Evaluating response for {httpVerb} request to {resp.requestMap.url}")
     print(f"Status Code: {resp.statusCode}")
-    if resp.responseBody is not None:
-        print(resp.responseBody)
+    if resp.body is not None:
+        print(resp.body)
 ```
 
 #### RequestMap Class
@@ -86,7 +86,7 @@ class RequestMap(msgspec.Struct):
 class RequestResponse(msgspec.Struct):
     requestMap: RequestMap
     statusCode: int
-    responseBody: dict | None = None
+    body: dict | None = None
 ```
 
 #### RequestResults Class

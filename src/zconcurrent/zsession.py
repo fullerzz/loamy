@@ -18,7 +18,7 @@ class RequestMap(msgspec.Struct):
 class RequestResponse(msgspec.Struct):
     requestMap: RequestMap
     statusCode: int
-    responseBody: dict | None = None
+    body: dict | None = None
 
 
 @dataclass
@@ -80,9 +80,9 @@ class zSession:
             reqMap.url, headers=reqMap.headers, params=reqMap.queryParams
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -96,9 +96,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -112,9 +112,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -128,9 +128,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -144,9 +144,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
@@ -160,9 +160,9 @@ class zSession:
             params=reqMap.queryParams,
         ) as resp:
             statusCode: int = resp.status
-            responseBody = await resp.json()
+            body = await resp.json()
         reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, responseBody=responseBody
+            requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
 
