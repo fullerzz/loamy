@@ -53,7 +53,7 @@ req3 = RequestMap(
 
 # Create zSession and call sendRequests()
 session = zSession(requestMaps=[req1, req2, req3])
-reqResps: RequestResults = sesion.sendRequests()
+reqResps: RequestResults = session.sendRequests(return_exceptions=True)
 
 # Handle exceptions raised for individual requests
 if len(reqResps.taskExceptions) > 0:
