@@ -5,3 +5,95 @@
 # Overview
 
 This project allows you to execute a list of http operations asynchronously from within an synchronous context.
+
+It does not care whether you should do this. It simply allows you to do so if you so desire.
+
+## Installing
+
+The package is available via pip. (Soon)
+
+```bash
+pip install zconcurrent
+```
+
+## Usage
+
+The package can be imported as shown:
+
+```python
+from zconcurrent.zsession import zSession, RequestMap, RequestResults
+```
+
+| Class | Description|
+| ----- | -----------|
+| `zSession` | Session object containing collection of requests to send |
+| `RequestMap` | Container object that stores all info about an individual request to send |
+| `RequestResults` | Container object that stores the request responses and any exceptions raised |
+
+
+### Example
+
+```python
+# Create RequestMap objects
+req1 = RequestMap(
+    url="https://baconipsum.com/api",
+    httpOperation="GET",
+    queryParams={"type": "meat-and-filler", "format": "json"},
+)
+req2 = RequestMap(
+    url="https://baconipsum.com/api",
+    httpOperation="GET",
+    queryParams={"type": "all-meat", "format": "json"},
+)
+req3 = RequestMap(
+    url="https://baconipsum.com/api",
+    httpOperation="GET",
+    queryParams={"type": "meat-and-filler", "format": "json"},
+)
+
+# Create zSession and call sendRequests()
+session = zSession(requestMaps=[req1, req2, req3])
+reqResps: RequestResults = session.sendRequests(return_exceptions=True)
+
+# Handle exceptions raised for individual requests
+if len(reqResps.taskExceptions) > 0:
+    print("Handling exceptions")
+
+# Handle responses for individual requests
+for resp in requestResponses:
+    httpVerb = resp.requestMap.httpOperation
+    print(f"Evaluating response for {httpVerb} request to {resp.requestMap.url}")
+    print(f"Status Code: {resp.statusCode}")
+    if resp.responseBody is not None:
+        print(resp.responseBody)
+```
+
+#### RequestMap Class
+
+```python
+class RequestMap(msgspec.Struct):
+    url: str
+    httpOperation: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
+    body: dict | None = None
+    queryParams: dict[str, str] | None = None
+    headers: dict[str, str] | None = None
+```
+
+
+#### RequestResponse Class
+
+```python
+class RequestResponse(msgspec.Struct):
+    requestMap: RequestMap
+    statusCode: int
+    responseBody: dict | None = None
+```
+
+#### RequestResults Class
+
+```python
+@dataclass
+class RequestResults:
+    requestResponses: list[RequestResponse]
+    taskExceptions: list[BaseException]
+```
