@@ -16,6 +16,12 @@ The package is available via pip. (Soon)
 pip install zconcurrent
 ```
 
+If you're not on Windows, install the uvloop extra to increase performance.
+
+```bash
+pip install "zconcurrent[uvloop]"
+```
+
 ## Usage
 
 The package can be imported as shown:
