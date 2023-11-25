@@ -13,13 +13,13 @@ It does not care whether you should do this. It simply allows you to do so if yo
 The package is available via pip.
 
 ```bash
-pip install zconcurrent
+pip install loamy
 ```
 
 If you're not on Windows, install the uvloop extra to increase performance.
 
 ```bash
-pip install "zconcurrent[uvloop]"
+pip install "loamy[uvloop]"
 ```
 
 ## Usage
@@ -27,12 +27,12 @@ pip install "zconcurrent[uvloop]"
 The package can be imported as shown:
 
 ```python
-from zconcurrent.zsession import zSession, RequestMap, RequestResults
+from loamy.zsession import zSession, RequestMap, RequestResults
 ```
 
 | Class | Description|
 | ----- | -----------|
-| `zSession` | Session object containing collection of requests to send |
+| `Clump` | Container object that stores collection of requests (type RequestMap) to send |
 | `RequestMap` | Container object that stores all info about an individual request to send |
 | `RequestResults` | Container object that stores the request responses and any exceptions raised |
 
@@ -58,7 +58,7 @@ req3 = RequestMap(
 )
 
 # Create zSession and call sendRequests()
-session = zSession(requestMaps=[req1, req2, req3])
+session = Clump(requestMaps=[req1, req2, req3])
 reqResps: RequestResults = session.sendRequests(return_exceptions=True)
 
 # Handle exceptions raised for individual requests

@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "zconcurrent"
+name = "loamy"
 version = "0.0.2.alpha"
 description = ""
 authors = ["Zach Fuller <zach.fuller1222@gmail.com>"]
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/fullerzz/zConcurrent"
-packages = [{include = "zconcurrent", from = "src"}]
+packages = [{include = "loamy", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"

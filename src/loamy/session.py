@@ -33,9 +33,9 @@ class RequestResults:
     taskExceptions: list[BaseException]
 
 
-class zSession:
-    def __init__(self, requestMaps: list[RequestMap]) -> None:
-        self._requestMaps: list[RequestMap] = requestMaps
+class Clump:
+    def __init__(self, requests: list[RequestMap]) -> None:
+        self._requestMaps: list[RequestMap] = requests
 
     def sendRequests(self, return_exceptions: bool = False) -> RequestResults:
         return asyncRun(self._sendRequests(rtn_exc=return_exceptions))

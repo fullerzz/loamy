@@ -1,6 +1,6 @@
 from typing import Any
 
-from src.zconcurrent.zsession import RequestMap
+from loamy.session import RequestMap
 
 
 def test_valid_RequestMap(base_config: dict[str, Any]):
