@@ -304,9 +304,9 @@ frozenlist==1.4.0 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:f0ed05f5079c708fe74bf9027e95125334b6978bf07fd5ab923e9e55e5fbb9d3 \
     --hash=sha256:f61e2dc5ad442c52b4887f1fdc112f97caeff4d9e6ebe78879364ac59f1663e1 \
     --hash=sha256:fec520865f42e5c7f050c2a79038897b1c7d1595e907a9e08e3353293ffc948e
-idna==3.5 ; python_version >= "3.10" and python_version < "4.0" \
-    --hash=sha256:27009fe2735bf8723353582d48575b23c533cc2c2de7b5a68908d91b5eb18d08 \
-    --hash=sha256:79b8f0ac92d2351be5f6122356c9a592c96d81c9a79e4b488bf2a6a15f88057a
+idna==3.6 ; python_version >= "3.10" and python_version < "4.0" \
+    --hash=sha256:9ecdbbd083b06798ae1e86adcbfe8ab1479cf864e4ee30fe4e46a003d12491ca \
+    --hash=sha256:c05567e9c24a6b9faaa835c4821bad0590fbb9d5779e7caa6e1cc4978e7eb24f
 msgspec==0.18.4 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:227fee75a25080a8b3677cdd95b9c0c3652e27869004a084886c65eb558b3dd6 \
     --hash=sha256:241277eed9fd91037372519fca62aecf823f7229c1d351030d0be5e3302580c1 \

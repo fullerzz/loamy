@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
         name: pypi
-        url: https://pypi.org/p/zconcurrent # Replace <package-name> with your PyPI project name
+        url: https://pypi.org/p/loamy # Replace <package-name> with your PyPI project name
     permissions:
         id-token: write  # IMPORTANT: mandatory for trusted publishing
 
@@ -114,7 +114,7 @@ jobs:
 
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/zconcurrent
+      url: https://test.pypi.org/p/loamy
 
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
