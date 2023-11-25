@@ -27,7 +27,7 @@ pip install "loamy[uvloop]"
 The package can be imported as shown:
 
 ```python
-from loamy.zsession import zSession, RequestMap, RequestResults
+from loamy.session import Clump, RequestMap, RequestResults
 ```
 
 | Class | Description|
@@ -57,8 +57,8 @@ req3 = RequestMap(
     queryParams={"type": "meat-and-filler", "format": "json"},
 )
 
-# Create zSession and call sendRequests()
-session = Clump(requestMaps=[req1, req2, req3])
+# Create Clump and call sendRequests()
+session = Clump(requests=[req1, req2, req3])
 reqResps: RequestResults = session.sendRequests(return_exceptions=True)
 
 # Handle exceptions raised for individual requests
