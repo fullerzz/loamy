@@ -1,6 +1,6 @@
 from typing import Any
 
-from loamy.session import RequestMap
+from src.loamy.session import RequestMap
 
 
 def test_valid_RequestMap(base_config: dict[str, Any]):
