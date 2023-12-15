@@ -93,4 +93,5 @@ class RequestResponse(msgspec.Struct):
     requestMap: RequestMap
     statusCode: int
     body: dict | None = None
+    error: BaseException | None = None
 ```
