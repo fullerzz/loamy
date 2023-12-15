@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "loamy"
-version = "0.0.2.alpha"
+version = "0.0.2"
 description = ""
 authors = ["Zach Fuller <zach.fuller1222@gmail.com>"]
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/fullerzz/zConcurrent"
+repository = "https://github.com/fullerzz/loamy"
 packages = [{include = "loamy", from = "src"}]
 
 [tool.poetry.dependencies]
