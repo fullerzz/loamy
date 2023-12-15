@@ -1,5 +1,4 @@
 import asyncio
-from dataclasses import dataclass
 from typing import Literal
 
 import aiohttp
@@ -25,35 +24,27 @@ class RequestResponse(msgspec.Struct):
     requestMap: RequestMap
     statusCode: int
     body: dict | None = None
-
-
-@dataclass
-class RequestResults:
-    requestResponses: list[RequestResponse]
-    taskExceptions: list[BaseException]
+    error: BaseException | None = None
 
 
 class Clump:
     def __init__(self, requests: list[RequestMap]) -> None:
         self._requestMaps: list[RequestMap] = requests
 
-    def sendRequests(self, return_exceptions: bool = False) -> RequestResults:
+    def sendRequests(self, return_exceptions: bool = False) -> list[RequestResponse]:
         return asyncRun(self._sendRequests(rtn_exc=return_exceptions))
 
-    async def _sendRequests(self, rtn_exc: bool) -> RequestResults:
+    async def _sendRequests(self, rtn_exc: bool) -> list[RequestResponse]:
         async with aiohttp.ClientSession() as session:
             httpTasks: list[asyncio.Task] = []
             for req in self._requestMaps:
                 httpTasks.append(
                     asyncio.ensure_future(self._routeIndividualRequest(req, session))
                 )
-            responses: list[RequestResponse | BaseException] = await asyncio.gather(
+            responses: list[RequestResponse] = await asyncio.gather(
                 *httpTasks, return_exceptions=rtn_exc
             )
-            requestResults: RequestResults = await _processResults(
-                taskResults=responses
-            )
-            return requestResults
+            return responses
 
     async def _routeIndividualRequest(
         self, reqMap: RequestMap, session: aiohttp.ClientSession
@@ -61,21 +52,24 @@ class Clump:
         requestResponse: RequestResponse = RequestResponse(
             requestMap=reqMap, statusCode=0
         )
-        match reqMap.httpOperation:
-            case "GET":
-                requestResponse = await self._sendGetRequest(reqMap, session)
-            case "POST":
-                requestResponse = await self._sendGetRequest(reqMap, session)
-            case "PUT":
-                requestResponse = await self._sendPutRequest(reqMap, session)
-            case "PATCH":
-                requestResponse = await self._sendPatchRequest(reqMap, session)
-            case "OPTIONS":
-                requestResponse = await self._sendOptionsRequest(reqMap, session)
-            case "DELETE":
-                requestResponse = await self._sendDeleteRequest(reqMap, session)
-            case _:
-                pass
+        try:
+            match reqMap.httpOperation:
+                case "GET":
+                    requestResponse = await self._sendGetRequest(reqMap, session)
+                case "POST":
+                    requestResponse = await self._sendPostRequest(reqMap, session)
+                case "PUT":
+                    requestResponse = await self._sendPutRequest(reqMap, session)
+                case "PATCH":
+                    requestResponse = await self._sendPatchRequest(reqMap, session)
+                case "OPTIONS":
+                    requestResponse = await self._sendOptionsRequest(reqMap, session)
+                case "DELETE":
+                    requestResponse = await self._sendDeleteRequest(reqMap, session)
+                case _:
+                    pass
+        except Exception as e:
+            requestResponse.error = e
 
         return requestResponse
 
@@ -171,16 +165,3 @@ class Clump:
             requestMap=reqMap, statusCode=statusCode, body=body
         )
         return reqResponse
-
-
-async def _processResults(
-    taskResults: list[RequestResponse | BaseException]
-) -> RequestResults:
-    responses: list[RequestResponse] = []
-    taskExceptions: list[BaseException] = []
-    for result in taskResults:
-        if isinstance(result, BaseException):
-            taskExceptions.append(result)
-        else:
-            responses.append(result)
-    return RequestResults(requestResponses=responses, taskExceptions=taskExceptions)
