@@ -27,14 +27,14 @@ pip install "loamy[uvloop]"
 The package can be imported as shown:
 
 ```python
-from loamy.session import Clump, RequestMap, RequestResults
+from loamy.session import Clump, RequestMap, RequestResponse
 ```
 
 | Class | Description|
 | ----- | -----------|
 | `Clump` | Container object that stores collection of requests (type RequestMap) to send |
 | `RequestMap` | Container object that stores all info about an individual request to send |
-| `RequestResults` | Container object that stores the request responses and any exceptions raised |
+| `RequestResponse` | Container object that stores the request response and any exception raised for each individual request |
 
 
 ### Example
@@ -59,19 +59,19 @@ req3 = RequestMap(
 
 # Create Clump and call sendRequests()
 session = Clump(requests=[req1, req2, req3])
-reqResps: RequestResults = session.sendRequests(return_exceptions=True)
+responses: list[RequestResponse] = session.sendRequests(return_exceptions=True)
 
-# Handle exceptions raised for individual requests
-if len(reqResps.taskExceptions) > 0:
-    print("Handling exceptions")
 
 # Handle responses for individual requests
-for resp in requestResponses:
+for resp in responses:
     httpVerb = resp.requestMap.httpOperation
     print(f"Evaluating response for {httpVerb} request to {resp.requestMap.url}")
-    print(f"Status Code: {resp.statusCode}")
-    if resp.body is not None:
-        print(resp.body)
+    if resp.error is not None:
+        print("Exception raised for request")
+    else:
+        print(f"Status Code: {resp.statusCode}")
+        if resp.body is not None:
+            print(resp.body)
 ```
 
 #### RequestMap Class
@@ -93,13 +93,4 @@ class RequestResponse(msgspec.Struct):
     requestMap: RequestMap
     statusCode: int
     body: dict | None = None
-```
-
-#### RequestResults Class
-
-```python
-@dataclass
-class RequestResults:
-    requestResponses: list[RequestResponse]
-    taskExceptions: list[BaseException]
 ```

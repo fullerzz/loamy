@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "loamy"
-version = "0.0.2.alpha"
+version = "0.0.2"
 description = ""
 authors = ["Zach Fuller <zach.fuller1222@gmail.com>"]
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/fullerzz/zConcurrent"
+repository = "https://github.com/fullerzz/loamy"
 packages = [{include = "loamy", from = "src"}]
 
 [tool.poetry.dependencies]
@@ -20,6 +20,9 @@ ruff = "~0.1.4"
 pre-commit = "3.5.0"
 pytest = "^7.4.3"
 pytest-asyncio = "^0.21.1"
+blacksheep = "^2.0.1"
+uvicorn = "^0.24.0.post1"
+mypy = "^1.7.1"
 
 [tool.poetry.extras]
 uvloop = ["uvloop"]
