@@ -1,5 +1,5 @@
 import pytest
-from loamy.session import Clump, RequestMap, RequestResults
+from loamy.session import Clump, RequestMap, RequestResponse
 
 
 @pytest.fixture(scope="session")
@@ -35,9 +35,11 @@ def request_map_to_trigger_exception() -> RequestMap:
 
 def test_send_requests(request_map_collection: list[RequestMap]) -> None:
     session = Clump(requests=request_map_collection)
-    responses: RequestResults = session.sendRequests()
-    assert len(responses.requestResponses) == 100
-    assert len(responses.taskExceptions) == 0
+    responses: list[RequestResponse] = session.sendRequests()
+    assert len(responses) == 100
+    for response in responses:
+        assert response.statusCode == 200
+        assert response.error is None
 
 
 def test_send_requests_with_exceptions(
@@ -47,6 +49,12 @@ def test_send_requests_with_exceptions(
     requests: list[RequestMap] = request_map_collection.copy()
     requests.append(request_map_to_trigger_exception)
     session = Clump(requests=requests)
-    responses: RequestResults = session.sendRequests(return_exceptions=True)
-    assert len(responses.requestResponses) == 100
-    assert len(responses.taskExceptions) == 1
+    responses: list[RequestResponse] = session.sendRequests(return_exceptions=True)
+    assert len(responses) == 101
+    for response in responses:
+        if response.requestMap.url == "http://localhost:44777/exception":
+            assert response.statusCode == 0
+            assert response.error is not None
+        else:
+            assert response.statusCode == 200
+            assert response.error is None
