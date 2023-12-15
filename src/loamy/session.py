@@ -65,7 +65,7 @@ class Clump:
             case "GET":
                 requestResponse = await self._sendGetRequest(reqMap, session)
             case "POST":
-                requestResponse = await self._sendGetRequest(reqMap, session)
+                requestResponse = await self._sendPostRequest(reqMap, session)
             case "PUT":
                 requestResponse = await self._sendPutRequest(reqMap, session)
             case "PATCH":
@@ -174,7 +174,7 @@ class Clump:
 
 
 async def _processResults(
-    taskResults: list[RequestResponse | BaseException]
+    taskResults: list[RequestResponse | BaseException],
 ) -> RequestResults:
     responses: list[RequestResponse] = []
     taskExceptions: list[BaseException] = []
