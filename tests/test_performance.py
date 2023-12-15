@@ -1,4 +1,4 @@
-# from zconcurrent.zsession import zSession, RequestMap
+# from loamy.session import Clump, RequestMap
 # from typing import List
 # import time
 # import httpx
@@ -15,7 +15,7 @@
 
 
 # def test_async_requests():
-#     session = zSession(requestMaps=sampleRequests)
+#     session = Clump(requestMaps=sampleRequests)
 #     startTime = time.time()
 #     responses = session.sendRequests()
 #     endTime = time.time()

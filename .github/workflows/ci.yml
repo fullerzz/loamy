@@ -42,8 +42,8 @@ jobs:
     - name: Code linting
       run: |
         source .venv/bin/activate
-        ruff check src/zconcurrent tests
-        ruff format --check src/zconcurrent tests
+        ruff check src/loamy tests
+        ruff format --check src/loamy tests
     - name: Test with pytest
       run: |
         source .venv/bin/activate
