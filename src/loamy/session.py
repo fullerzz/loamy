@@ -57,7 +57,7 @@ class Clump:
                 case "GET":
                     requestResponse = await self._sendGetRequest(reqMap, session)
                 case "POST":
-                    requestResponse = await self._sendGetRequest(reqMap, session)
+                    requestResponse = await self._sendPostRequest(reqMap, session)
                 case "PUT":
                     requestResponse = await self._sendPutRequest(reqMap, session)
                 case "PATCH":
