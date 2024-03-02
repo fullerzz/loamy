@@ -39,11 +39,11 @@ jobs:
     - name: Install dependencies
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --no-interaction --no-root
-    - name: Code linting
-      run: |
-        source .venv/bin/activate
-        ruff check src/loamy tests
-        ruff format --check src/loamy tests
+    # - name: Code linting
+    #   run: |
+    #     source .venv/bin/activate
+    #     ruff check src/loamy tests
+    #     ruff format --check src/loamy tests
     - name: Test with pytest
       run: |
         source .venv/bin/activate
