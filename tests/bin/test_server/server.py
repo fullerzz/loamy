@@ -16,4 +16,4 @@ async def post_foo(request: Request) -> Response:
 
 @get("/exception")
 async def mock_exception() -> Response:
-    return Response(500, content=b"Internal Server Error")
+    return Response(500)
