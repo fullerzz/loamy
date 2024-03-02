@@ -13,6 +13,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    container: ubuntu
     strategy:
       fail-fast: false
       matrix:
