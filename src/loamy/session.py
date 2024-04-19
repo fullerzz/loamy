@@ -9,7 +9,7 @@ try:
 
     async_run = uvloop.run
 except ModuleNotFoundError:
-    async_run = asyncio.run
+    async_run = asyncio.run  # type: ignore
 
 
 class RequestMap(msgspec.Struct):
