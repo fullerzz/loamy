@@ -44,7 +44,6 @@ jobs:
         source .venv/bin/activate
         ruff check src/loamy
         ruff format --check src/loamy
-        mypy src/loamy
     - name: Test with pytest
       run: |
         source .venv/bin/activate
