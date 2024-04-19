@@ -7,22 +7,22 @@ import msgspec
 try:
     import uvloop
 
-    asyncRun = uvloop.run
+    async_run = uvloop.run
 except ModuleNotFoundError:
-    asyncRun = asyncio.run
+    async_run = asyncio.run  # type: ignore
 
 
 class RequestMap(msgspec.Struct):
     url: str
-    httpOperation: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
+    http_op: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
     body: dict | None = None
-    queryParams: dict[str, str] | None = None
+    query_params: dict[str, str] | None = None
     headers: dict[str, str] | None = None
 
 
 class RequestResponse(msgspec.Struct):
-    requestMap: RequestMap
-    statusCode: int
+    request_map: RequestMap
+    status_code: int
     body: dict | None = None
     error: BaseException | None = None
 
@@ -31,137 +31,144 @@ class Clump:
     def __init__(self, requests: list[RequestMap]) -> None:
         self._requestMaps: list[RequestMap] = requests
 
-    def sendRequests(self, return_exceptions: bool = False) -> list[RequestResponse]:
-        return asyncRun(self._sendRequests(rtn_exc=return_exceptions))
+    def send_requests(self, return_exceptions: bool = False) -> list[RequestResponse]:
+        return async_run(self._send_requests(rtn_exc=return_exceptions))
 
-    async def _sendRequests(self, rtn_exc: bool) -> list[RequestResponse]:
+    async def _send_requests(self, rtn_exc: bool) -> list[RequestResponse]:
         async with aiohttp.ClientSession() as session:
-            httpTasks: list[asyncio.Task] = []
-            for req in self._requestMaps:
-                httpTasks.append(
-                    asyncio.ensure_future(self._routeIndividualRequest(req, session))
-                )
-            responses: list[RequestResponse] = await asyncio.gather(
-                *httpTasks, return_exceptions=rtn_exc
+            http_tasks: list[asyncio.Task] = [
+                asyncio.ensure_future(self._route_request(req, session))
+                for req in self._requestMaps
+            ]
+            results: list[RequestResponse | BaseException] = await asyncio.gather(
+                *http_tasks, return_exceptions=rtn_exc
             )
+            responses: list[RequestResponse] = []
+            for i, resp in enumerate(results):
+                if isinstance(resp, BaseException):
+                    responses.append(
+                        RequestResponse(
+                            request_map=self._requestMaps[i],
+                            status_code=418,
+                            error=resp,
+                        )
+                    )
             return responses
 
-    async def _routeIndividualRequest(
-        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    async def _route_request(
+        self, req_map: RequestMap, session: aiohttp.ClientSession
     ) -> RequestResponse:
-        requestResponse: RequestResponse = RequestResponse(
-            requestMap=reqMap, statusCode=0
-        )
+        response: RequestResponse = RequestResponse(request_map=req_map, status_code=0)
         try:
-            match reqMap.httpOperation:
+            match req_map.http_op:
                 case "GET":
-                    requestResponse = await self._sendGetRequest(reqMap, session)
+                    response = await self._send_get_request(req_map, session)
                 case "POST":
-                    requestResponse = await self._sendPostRequest(reqMap, session)
+                    response = await self._send_post_request(req_map, session)
                 case "PUT":
-                    requestResponse = await self._sendPutRequest(reqMap, session)
+                    response = await self._send_put_request(req_map, session)
                 case "PATCH":
-                    requestResponse = await self._sendPatchRequest(reqMap, session)
+                    response = await self._send_patch_request(req_map, session)
                 case "OPTIONS":
-                    requestResponse = await self._sendOptionsRequest(reqMap, session)
+                    response = await self._send_options_request(req_map, session)
                 case "DELETE":
-                    requestResponse = await self._sendDeleteRequest(reqMap, session)
+                    response = await self._send_delete_request(req_map, session)
                 case _:
                     pass
         except Exception as e:
-            requestResponse.error = e
+            response.error = e
 
-        return requestResponse
+        return response
 
-    async def _sendGetRequest(
-        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    async def _send_get_request(
+        self, req_map: RequestMap, session: aiohttp.ClientSession
     ) -> RequestResponse:
         async with session.get(
-            reqMap.url, headers=reqMap.headers, params=reqMap.queryParams
+            req_map.url, headers=req_map.headers, params=req_map.query_params
         ) as resp:
-            statusCode: int = resp.status
+            status_code: int = resp.status
             body = await resp.json()
-        reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, body=body
+        response = RequestResponse(
+            request_map=req_map, status_code=status_code, body=body
         )
-        return reqResponse
+        return response
 
-    async def _sendPostRequest(
-        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    async def _send_post_request(
+        self, req_map: RequestMap, session: aiohttp.ClientSession
     ) -> RequestResponse:
         async with session.post(
-            reqMap.url,
-            json=reqMap.body,
-            headers=reqMap.headers,
-            params=reqMap.queryParams,
+            req_map.url,
+            json=req_map.body,
+            headers=req_map.headers,
+            params=req_map.query_params,
         ) as resp:
-            statusCode: int = resp.status
+            status_code: int = resp.status
             body = await resp.json()
-        reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, body=body
+        response = RequestResponse(
+            request_map=req_map, status_code=status_code, body=body
         )
-        return reqResponse
+        return response
 
-    async def _sendPutRequest(
-        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    async def _send_put_request(
+        self, req_map: RequestMap, session: aiohttp.ClientSession
     ) -> RequestResponse:
         async with session.put(
-            reqMap.url,
-            json=reqMap.body,
-            headers=reqMap.headers,
-            params=reqMap.queryParams,
+            req_map.url,
+            json=req_map.body,
+            headers=req_map.headers,
+            params=req_map.query_params,
         ) as resp:
-            statusCode: int = resp.status
+            status_code: int = resp.status
             body = await resp.json()
-        reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, body=body
+        response = RequestResponse(
+            request_map=req_map, status_code=status_code, body=body
         )
-        return reqResponse
+        return response
 
-    async def _sendPatchRequest(
-        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    async def _send_patch_request(
+        self, req_map: RequestMap, session: aiohttp.ClientSession
     ) -> RequestResponse:
         async with session.patch(
-            reqMap.url,
-            json=reqMap.body,
-            headers=reqMap.headers,
-            params=reqMap.queryParams,
+            req_map.url,
+            json=req_map.body,
+            headers=req_map.headers,
+            params=req_map.query_params,
         ) as resp:
-            statusCode: int = resp.status
+            status_code: int = resp.status
             body = await resp.json()
-        reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, body=body
+        response = RequestResponse(
+            request_map=req_map, status_code=status_code, body=body
         )
-        return reqResponse
+        return response
 
-    async def _sendOptionsRequest(
-        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    async def _send_options_request(
+        self, req_map: RequestMap, session: aiohttp.ClientSession
     ) -> RequestResponse:
         async with session.options(
-            reqMap.url,
-            json=reqMap.body,
-            headers=reqMap.headers,
-            params=reqMap.queryParams,
+            req_map.url,
+            json=req_map.body,
+            headers=req_map.headers,
+            params=req_map.query_params,
         ) as resp:
-            statusCode: int = resp.status
+            status_code: int = resp.status
             body = await resp.json()
-        reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, body=body
+        response = RequestResponse(
+            request_map=req_map, status_code=status_code, body=body
         )
-        return reqResponse
+        return response
 
-    async def _sendDeleteRequest(
-        self, reqMap: RequestMap, session: aiohttp.ClientSession
+    async def _send_delete_request(
+        self, req_map: RequestMap, session: aiohttp.ClientSession
     ) -> RequestResponse:
         async with session.delete(
-            reqMap.url,
-            json=reqMap.body,
-            headers=reqMap.headers,
-            params=reqMap.queryParams,
+            req_map.url,
+            json=req_map.body,
+            headers=req_map.headers,
+            params=req_map.query_params,
         ) as resp:
-            statusCode: int = resp.status
+            status_code: int = resp.status
             body = await resp.json()
-        reqResponse = RequestResponse(
-            requestMap=reqMap, statusCode=statusCode, body=body
+        response = RequestResponse(
+            request_map=req_map, status_code=status_code, body=body
         )
-        return reqResponse
+        return response

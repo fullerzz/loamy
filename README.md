@@ -43,33 +43,33 @@ from loamy.session import Clump, RequestMap, RequestResponse
 # Create RequestMap objects
 req1 = RequestMap(
     url="https://baconipsum.com/api",
-    httpOperation="GET",
-    queryParams={"type": "meat-and-filler", "format": "json"},
+    http_op="GET",
+    query_params={"type": "meat-and-filler", "format": "json"},
 )
 req2 = RequestMap(
     url="https://baconipsum.com/api",
-    httpOperation="GET",
-    queryParams={"type": "all-meat", "format": "json"},
+    http_op="GET",
+    query_params={"type": "all-meat", "format": "json"},
 )
 req3 = RequestMap(
     url="https://baconipsum.com/api",
-    httpOperation="GET",
-    queryParams={"type": "meat-and-filler", "format": "json"},
+    http_op="GET",
+    query_params={"type": "meat-and-filler", "format": "json"},
 )
 
-# Create Clump and call sendRequests()
+# Create Clump and call send_requests()
 session = Clump(requests=[req1, req2, req3])
-responses: list[RequestResponse] = session.sendRequests(return_exceptions=True)
+responses: list[RequestResponse] = session.send_requests(return_exceptions=True)
 
 
 # Handle responses for individual requests
 for resp in responses:
-    httpVerb = resp.requestMap.httpOperation
-    print(f"Evaluating response for {httpVerb} request to {resp.requestMap.url}")
+    http_verb = resp.request_map.http_op
+    print(f"Evaluating response for {http_verb} request to {resp.request_map.url}")
     if resp.error is not None:
         print("Exception raised for request")
     else:
-        print(f"Status Code: {resp.statusCode}")
+        print(f"Status Code: {resp.status_code}")
         if resp.body is not None:
             print(resp.body)
 ```
@@ -79,9 +79,9 @@ for resp in responses:
 ```python
 class RequestMap(msgspec.Struct):
     url: str
-    httpOperation: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
+    http_op: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
     body: dict | None = None
-    queryParams: dict[str, str] | None = None
+    query_params: dict[str, str] | None = None
     headers: dict[str, str] | None = None
 ```
 
@@ -90,8 +90,8 @@ class RequestMap(msgspec.Struct):
 
 ```python
 class RequestResponse(msgspec.Struct):
-    requestMap: RequestMap
-    statusCode: int
+    request_map: RequestMap
+    status_code: int
     body: dict | None = None
     error: BaseException | None = None
 ```
