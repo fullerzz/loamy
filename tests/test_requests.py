@@ -14,14 +14,14 @@ def request_map_collection() -> List[RequestMap]:
             requests.append(
                 RequestMap(
                     url="http://localhost:44777/",
-                    httpOperation="GET",
+                    http_op="GET",
                 )
             )
         else:
             requests.append(
                 RequestMap(
                     url="http://localhost:44777/foo",
-                    httpOperation="POST",
+                    http_op="POST",
                     body={"foo": "bar"},
                 )
             )
@@ -32,16 +32,17 @@ def request_map_collection() -> List[RequestMap]:
 def request_map_to_trigger_exception() -> RequestMap:
     return RequestMap(
         url="http://localhost:44777/exception",
-        httpOperation="GET",
+        http_op="GET",
     )
 
 
 def test_send_requests(request_map_collection: List[RequestMap]) -> None:
+    assert True is True
     session = Clump(requests=request_map_collection)
-    responses: List[RequestResponse] = session.sendRequests()
+    responses: List[RequestResponse] = session.send_requests()
     assert len(responses) == 100
     for response in responses:
-        assert response.statusCode == 200
+        assert response.status_code == 200
         assert response.error is None
 
 
@@ -52,12 +53,12 @@ def test_send_requests_with_exceptions(
     requests: List[RequestMap] = request_map_collection.copy()
     requests.append(request_map_to_trigger_exception)
     session = Clump(requests=requests)
-    responses: List[RequestResponse] = session.sendRequests(return_exceptions=True)
+    responses: List[RequestResponse] = session.send_requests(return_exceptions=True)
     assert len(responses) == 101
     for response in responses:
-        if response.requestMap.url == "http://localhost:44777/exception":
-            assert response.statusCode == 0
+        if response.request_map.url == "http://localhost:44777/exception":
+            assert response.status_code == 0
             assert response.error is not None
         else:
-            assert response.statusCode == 200
+            assert response.status_code == 200
             assert response.error is None
