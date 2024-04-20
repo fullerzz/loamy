@@ -53,6 +53,8 @@ class Clump:
                             error=resp,
                         )
                     )
+                else:
+                    responses.append(resp)
             return responses
 
     async def _route_request(

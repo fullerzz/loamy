@@ -1,60 +1,64 @@
-# import pytest
-# from src.loamy.session import Clump, RequestMap, RequestResponse
+from typing import List
+
+import pytest
+
+from src.loamy.session import Clump, RequestMap, RequestResponse
 
 
-# @pytest.fixture(scope="session")
-# def request_map_collection() -> list[RequestMap]:
-#     requests: list[RequestMap] = []
-#     for i in range(0, 100):
-#         print(i)
-#         if i % 2 == 0:
-#             requests.append(
-#                 RequestMap(
-#                     url="http://localhost:44777/",
-#                     httpOperation="GET",
-#                 )
-#             )
-#         else:
-#             requests.append(
-#                 RequestMap(
-#                     url="http://localhost:44777/foo",
-#                     httpOperation="POST",
-#                     body={"foo": "bar"},
-#                 )
-#             )
-#     return requests
+@pytest.fixture(scope="session")
+def request_map_collection() -> List[RequestMap]:
+    requests: List[RequestMap] = []
+    for i in range(0, 100):
+        print(i)
+        if i % 2 == 0:
+            requests.append(
+                RequestMap(
+                    url="http://localhost:44777/",
+                    http_op="GET",
+                )
+            )
+        else:
+            requests.append(
+                RequestMap(
+                    url="http://localhost:44777/foo",
+                    http_op="POST",
+                    body={"foo": "bar"},
+                )
+            )
+    return requests
 
 
-# @pytest.fixture(scope="session")
-# def request_map_to_trigger_exception() -> RequestMap:
-#     return RequestMap(
-#         url="http://localhost:44777/exception",
-#         httpOperation="GET",
-#     )
+@pytest.fixture(scope="session")
+def request_map_to_trigger_exception() -> RequestMap:
+    return RequestMap(
+        url="http://localhost:44777/exception",
+        http_op="GET",
+    )
 
 
-# def test_send_requests(request_map_collection: list[RequestMap]) -> None:
-#     session = Clump(requests=request_map_collection)
-#     responses: list[RequestResponse] = session.sendRequests()
-#     assert len(responses) == 100
-#     for response in responses:
-#         assert response.statusCode == 200
-#         assert response.error is None
+def test_send_requests(request_map_collection: List[RequestMap]) -> None:
+    assert True is True
+    session = Clump(requests=request_map_collection)
+    responses: List[RequestResponse] = session.send_requests()
+    assert len(responses) == 100
+    for response in responses:
+        assert response.status_code == 200
+        assert response.error is None
 
 
-# def test_send_requests_with_exceptions(
-#     request_map_collection: list[RequestMap],
-#     request_map_to_trigger_exception: RequestMap,
-# ) -> None:
-#     requests: list[RequestMap] = request_map_collection.copy()
-#     requests.append(request_map_to_trigger_exception)
-#     session = Clump(requests=requests)
-#     responses: list[RequestResponse] = session.sendRequests(return_exceptions=True)
-#     assert len(responses) == 101
-#     for response in responses:
-#         if response.requestMap.url == "http://localhost:44777/exception":
-#             assert response.statusCode == 0
-#             assert response.error is not None
-#         else:
-#             assert response.statusCode == 200
-#             assert response.error is None
+def test_send_requests_with_exceptions(
+    request_map_collection: List[RequestMap],
+    request_map_to_trigger_exception: RequestMap,
+) -> None:
+    requests: List[RequestMap] = request_map_collection.copy()
+    requests.append(request_map_to_trigger_exception)
+    session = Clump(requests=requests)
+    responses: List[RequestResponse] = session.send_requests(return_exceptions=True)
+    assert len(responses) == 101
+    for response in responses:
+        if response.request_map.url == "http://localhost:44777/exception":
+            assert response.status_code == 0
+            assert response.error is not None
+        else:
+            assert response.status_code == 200
+            assert response.error is None

@@ -15,5 +15,5 @@ async def post_foo(request: Request) -> Response:
 
 
 @get("/exception")
-async def mock_exception():
+async def mock_exception() -> Response:
     raise Exception("Mock exception")

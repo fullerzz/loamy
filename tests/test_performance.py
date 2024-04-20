@@ -5,7 +5,7 @@
 
 # requestMap = RequestMap(
 #         url="http://localhost:8080/albums",
-#         httpOperation="GET",
+#         http_op="GET",
 #     )
 
 # sampleRequests: List[RequestMap] = []
@@ -15,9 +15,9 @@
 
 
 # def test_async_requests():
-#     session = Clump(requestMaps=sampleRequests)
+#     session = Clump(requests=sampleRequests)
 #     startTime = time.time()
-#     responses = session.sendRequests()
+#     responses = session.send_requests()
 #     endTime = time.time()
 #     elapsedTime = endTime - startTime
 #     print(f"Asynchronous operation completed {len(sampleRequests)} requests in {elapsedTime} seconds")
