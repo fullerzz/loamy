@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "loamy"
-version = "0.0.5"
+version = "0.0.6"
 description = ""
 authors = ["Zach Fuller <zach.fuller1222@gmail.com>"]
 readme = "README.md"
