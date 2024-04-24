@@ -1,15 +1,27 @@
 import asyncio
+import sys
+from json import JSONDecodeError
 from typing import Literal
 
 import aiohttp
 import msgspec
+from loguru import logger
+
+logger.add(
+    sys.stdout,
+    format="{time} {level} {message}",
+    filter="loamy",
+    level="DEBUG",
+)
 
 try:
     import uvloop
 
     async_run = uvloop.run
+    logger.debug("Using uvloop for async operations")
 except ModuleNotFoundError:
     async_run = asyncio.run  # type: ignore
+    logger.debug("Using asyncio for async operations")
 
 
 class RequestMap(msgspec.Struct):
@@ -30,8 +42,12 @@ class RequestResponse(msgspec.Struct):
 class Clump:
     def __init__(self, requests: list[RequestMap]) -> None:
         self._requestMaps: list[RequestMap] = requests
+        logger.debug(f"Clump created with {len(self._requestMaps)} requests")
 
     def send_requests(self, return_exceptions: bool = False) -> list[RequestResponse]:
+        logger.info(
+            f"Sending {len(self._requestMaps)!s} requests with {return_exceptions=!s}"
+        )
         return async_run(self._send_requests(rtn_exc=return_exceptions))
 
     async def _send_requests(self, rtn_exc: bool) -> list[RequestResponse]:
@@ -40,12 +56,15 @@ class Clump:
                 asyncio.ensure_future(self._route_request(req, session))
                 for req in self._requestMaps
             ]
+            logger.debug("Beginnging execution of request coroutines")
             results: list[RequestResponse | BaseException] = await asyncio.gather(
                 *http_tasks, return_exceptions=rtn_exc
             )
+            logger.debug("Finished execution of request coroutines")
             responses: list[RequestResponse] = []
             for i, resp in enumerate(results):
                 if isinstance(resp, BaseException):
+                    logger.error(f"Manually creating RequestResponse object and nesting error - index {i}")  # fmt: skip
                     responses.append(
                         RequestResponse(
                             request_map=self._requestMaps[i],
@@ -55,6 +74,7 @@ class Clump:
                     )
                 else:
                     responses.append(resp)
+            logger.info(f"Returning {len(responses)!s} responses")
             return responses
 
     async def _route_request(
@@ -62,6 +82,7 @@ class Clump:
     ) -> RequestResponse:
         response: RequestResponse = RequestResponse(request_map=req_map, status_code=0)
         try:
+            logger.debug(f"Sending {req_map.http_op} request to {req_map.url}")
             match req_map.http_op:
                 case "GET":
                     response = await self._send_get_request(req_map, session)
@@ -76,8 +97,12 @@ class Clump:
                 case "DELETE":
                     response = await self._send_delete_request(req_map, session)
                 case _:
-                    pass
+                    logger.error("No matching HTTP operation found")
+                    raise NotImplementedError
         except Exception as e:
+            logger.exception(
+                f"Error sending {req_map.http_op} request to {req_map.url}"
+            )
             response.error = e
 
         return response
@@ -88,10 +113,20 @@ class Clump:
         async with session.get(
             req_map.url, headers=req_map.headers, params=req_map.query_params
         ) as resp:
+            error: aiohttp.ContentTypeError | JSONDecodeError | None = None
             status_code: int = resp.status
-            body = await resp.json()
+            logger.debug(f"{resp.url} returned {status_code}")
+            try:
+                body = await resp.json()
+            except (aiohttp.ContentTypeError, JSONDecodeError) as e:
+                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                error = e
+                logger.trace("Attempting to read response as text")
+                text: str = await resp.text()
+                logger.trace("Successfully read response as text")
+                body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body
+            request_map=req_map, status_code=status_code, body=body, error=error
         )
         return response
 
@@ -104,10 +139,20 @@ class Clump:
             headers=req_map.headers,
             params=req_map.query_params,
         ) as resp:
+            error: aiohttp.ContentTypeError | JSONDecodeError | None = None
             status_code: int = resp.status
-            body = await resp.json()
+            logger.debug(f"{resp.url} returned {status_code}")
+            try:
+                body = await resp.json()
+            except (aiohttp.ContentTypeError, JSONDecodeError) as e:
+                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                error = e
+                logger.trace("Attempting to read response as text")
+                text: str = await resp.text()
+                logger.trace("Successfully read response as text")
+                body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body
+            request_map=req_map, status_code=status_code, body=body, error=error
         )
         return response
 
@@ -121,9 +166,19 @@ class Clump:
             params=req_map.query_params,
         ) as resp:
             status_code: int = resp.status
-            body = await resp.json()
+            error: aiohttp.ContentTypeError | JSONDecodeError | None = None
+            logger.debug(f"{resp.url} returned {status_code}")
+            try:
+                body = await resp.json()
+            except (aiohttp.ContentTypeError, JSONDecodeError) as e:
+                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                error = e
+                logger.trace("Attempting to read response as text")
+                text: str = await resp.text()
+                logger.trace("Successfully read response as text")
+                body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body
+            request_map=req_map, status_code=status_code, body=body, error=error
         )
         return response
 
@@ -137,9 +192,19 @@ class Clump:
             params=req_map.query_params,
         ) as resp:
             status_code: int = resp.status
-            body = await resp.json()
+            error: aiohttp.ContentTypeError | JSONDecodeError | None = None
+            logger.debug(f"{resp.url} returned {status_code}")
+            try:
+                body = await resp.json()
+            except (aiohttp.ContentTypeError, JSONDecodeError) as e:
+                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                error = e
+                logger.trace("Attempting to read response as text")
+                text: str = await resp.text()
+                logger.trace("Successfully read response as text")
+                body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body
+            request_map=req_map, status_code=status_code, body=body, error=error
         )
         return response
 
@@ -153,9 +218,19 @@ class Clump:
             params=req_map.query_params,
         ) as resp:
             status_code: int = resp.status
-            body = await resp.json()
+            error: aiohttp.ContentTypeError | JSONDecodeError | None = None
+            logger.debug(f"{resp.url} returned {status_code}")
+            try:
+                body = await resp.json()
+            except (aiohttp.ContentTypeError, JSONDecodeError) as e:
+                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                error = e
+                logger.trace("Attempting to read response as text")
+                text: str = await resp.text()
+                logger.trace("Successfully read response as text")
+                body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body
+            request_map=req_map, status_code=status_code, body=body, error=error
         )
         return response
 
@@ -169,8 +244,18 @@ class Clump:
             params=req_map.query_params,
         ) as resp:
             status_code: int = resp.status
-            body = await resp.json()
+            error: aiohttp.ContentTypeError | JSONDecodeError | None = None
+            logger.debug(f"{resp.url} returned {status_code}")
+            try:
+                body = await resp.json()
+            except (aiohttp.ContentTypeError, JSONDecodeError) as e:
+                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                error = e
+                logger.trace("Attempting to read response as text")
+                text: str = await resp.text()
+                logger.trace("Successfully read response as text")
+                body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body
+            request_map=req_map, status_code=status_code, body=body, error=error
         )
         return response

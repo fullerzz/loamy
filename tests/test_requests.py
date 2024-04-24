@@ -9,7 +9,6 @@ from src.loamy.session import Clump, RequestMap, RequestResponse
 def request_map_collection() -> List[RequestMap]:
     requests: List[RequestMap] = []
     for i in range(0, 100):
-        print(i)
         if i % 2 == 0:
             requests.append(
                 RequestMap(
@@ -57,7 +56,7 @@ def test_send_requests_with_exceptions(
     assert len(responses) == 101
     for response in responses:
         if response.request_map.url == "http://localhost:44777/exception":
-            assert response.status_code == 0
+            assert response.status_code == 500
             assert response.error is not None
         else:
             assert response.status_code == 200
