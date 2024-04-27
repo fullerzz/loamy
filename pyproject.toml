@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "loamy"
-version = "0.0.7"
-description = ""
+version = "0.0.8"
+description = "This project allows you to execute a list of http operations asynchronously from within a synchronous context."
 authors = ["Zach Fuller <zach.fuller1222@gmail.com>"]
 readme = "README.md"
 license = "MIT"

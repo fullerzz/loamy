@@ -6,7 +6,7 @@
 
 # Overview
 
-This project allows you to execute a list of http operations asynchronously from within an synchronous context.
+This project allows you to execute a list of http operations asynchronously from within a synchronous context.
 
 It does not care whether you should do this. It simply allows you to do so if you desire.
 
