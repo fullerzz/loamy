@@ -1,5 +1,4 @@
 import asyncio
-import sys
 from json import JSONDecodeError
 from typing import Literal
 
@@ -7,13 +6,9 @@ import aiohttp
 import msgspec
 from loguru import logger
 
-logger.add(
-    sys.stdout,
-    format="{time} {level} {message}",
-    filter="loamy",
-    level="DEBUG",
-)
-
+# Disable the logger. If a consuming app wishes to see loamy's logs, they can enable() it again.
+logger.disable("loamy")
+# https://loguru.readthedocs.io/en/stable/overview.html#suitable-for-scripts-and-libraries
 try:
     import uvloop
 
@@ -25,6 +20,10 @@ except ModuleNotFoundError:
 
 
 class RequestMap(msgspec.Struct):
+    """
+    Class containing information about a single HTTP request to be sent.
+    """
+
     url: str
     http_op: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
     body: dict | None = None
@@ -33,6 +32,10 @@ class RequestMap(msgspec.Struct):
 
 
 class RequestResponse(msgspec.Struct):
+    """
+    Class containing information about the result of an HTTP request.
+    """
+
     request_map: RequestMap
     status_code: int
     body: dict | None = None
@@ -41,6 +44,10 @@ class RequestResponse(msgspec.Struct):
 
 
 class Clump:
+    """
+    Class for sending multiple HTTP requests concurrently.
+    """
+
     def __init__(self, requests: list[RequestMap]) -> None:
         self._requestMaps: list[RequestMap] = requests
         logger.debug(f"Clump created with {len(self._requestMaps)} requests")
@@ -120,7 +127,7 @@ class Clump:
             try:
                 body = await resp.json()
             except (aiohttp.ContentTypeError, JSONDecodeError) as e:
-                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                logger.error(f"Failed to decode JSON response from {resp.url}")
                 error = e
                 logger.trace("Attempting to read response as text")
                 text: str = await resp.text()
@@ -150,7 +157,7 @@ class Clump:
             try:
                 body = await resp.json()
             except (aiohttp.ContentTypeError, JSONDecodeError) as e:
-                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                logger.error(f"Failed to decode JSON response from {resp.url}")
                 error = e
                 logger.trace("Attempting to read response as text")
                 text: str = await resp.text()
@@ -180,7 +187,7 @@ class Clump:
             try:
                 body = await resp.json()
             except (aiohttp.ContentTypeError, JSONDecodeError) as e:
-                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                logger.error(f"Failed to decode JSON response from {resp.url}")
                 error = e
                 logger.trace("Attempting to read response as text")
                 text: str = await resp.text()
@@ -210,7 +217,7 @@ class Clump:
             try:
                 body = await resp.json()
             except (aiohttp.ContentTypeError, JSONDecodeError) as e:
-                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                logger.error(f"Failed to decode JSON response from {resp.url}")
                 error = e
                 logger.trace("Attempting to read response as text")
                 text: str = await resp.text()
@@ -240,7 +247,7 @@ class Clump:
             try:
                 body = await resp.json()
             except (aiohttp.ContentTypeError, JSONDecodeError) as e:
-                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                logger.error(f"Failed to decode JSON response from {resp.url}")
                 error = e
                 logger.trace("Attempting to read response as text")
                 text: str = await resp.text()
@@ -270,7 +277,7 @@ class Clump:
             try:
                 body = await resp.json()
             except (aiohttp.ContentTypeError, JSONDecodeError) as e:
-                logger.exception(f"Failed to decode JSON response from {resp.url}")
+                logger.error(f"Failed to decode JSON response from {resp.url}")
                 error = e
                 logger.trace("Attempting to read response as text")
                 text: str = await resp.text()
