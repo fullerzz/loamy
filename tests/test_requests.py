@@ -47,8 +47,8 @@ def test_send_requests(request_map_collection: List[RequestMap]) -> None:
         assert response.headers["Content-Type"] == "application/json"
         if response.request_map.http_op == "POST":
             assert response.headers is not None
-            assert "X-Test" in response.headers
-            assert "Test" == response.headers["X-Test"]
+            assert "x-test" in response.headers
+            assert "Test" == response.headers["x-test"]
 
 def test_send_requests_with_exceptions(
     request_map_collection: List[RequestMap],
