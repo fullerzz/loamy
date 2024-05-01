@@ -11,7 +11,9 @@ async def index() -> Response:
 @post("/foo")
 async def post_foo(request: Request) -> Response:
     data = await request.json()
-    return json(data)
+    resp: Response = json(data)
+    resp.add_header(b"X-Test", b"Test")
+    return resp
 
 
 @get("/exception")

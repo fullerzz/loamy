@@ -36,14 +36,18 @@ def request_map_to_trigger_exception() -> RequestMap:
 
 
 def test_send_requests(request_map_collection: List[RequestMap]) -> None:
-    assert True is True
     session = Clump(requests=request_map_collection)
     responses: List[RequestResponse] = session.send_requests()
     assert len(responses) == 100
     for response in responses:
         assert response.status_code == 200
         assert response.error is None
-
+        assert response.headers is not None
+        assert response.headers["Content-Type"] == "application/json"
+        if response.request_map.http_op == "POST":
+            assert response.headers is not None
+            assert "x-test" in response.headers
+            assert "Test" == response.headers["x-test"]
 
 def test_send_requests_with_exceptions(
     request_map_collection: List[RequestMap],
