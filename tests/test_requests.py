@@ -36,7 +36,6 @@ def request_map_to_trigger_exception() -> RequestMap:
 
 
 def test_send_requests(request_map_collection: List[RequestMap]) -> None:
-    assert True is True
     session = Clump(requests=request_map_collection)
     responses: List[RequestResponse] = session.send_requests()
     assert len(responses) == 100
