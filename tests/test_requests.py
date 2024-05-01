@@ -43,9 +43,9 @@ def test_send_requests(request_map_collection: List[RequestMap]) -> None:
     for response in responses:
         assert response.status_code == 200
         assert response.error is None
-        if response.request_map.http_op == "GET":
-            assert response.headers is None
-        elif response.request_map.http_op == "POST":
+        assert response.headers is not None
+        assert response.headers["Content-Type"] == "application/json"
+        if response.request_map.http_op == "POST":
             assert response.headers is not None
             assert "X-Test" in response.headers
             assert "Test" == response.headers["X-Test"]
