@@ -36,6 +36,7 @@ class RequestResponse(msgspec.Struct):
     request_map: RequestMap
     status_code: int
     body: dict | None = None
+    headers: dict[str, str] | None = None
     error: BaseException | None = None
 
 
@@ -126,7 +127,11 @@ class Clump:
                 logger.trace("Successfully read response as text")
                 body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body, error=error
+            request_map=req_map,
+            status_code=status_code,
+            body=body,
+            headers=dict(resp.headers),
+            error=error,
         )
         return response
 
@@ -152,7 +157,11 @@ class Clump:
                 logger.trace("Successfully read response as text")
                 body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body, error=error
+            request_map=req_map,
+            status_code=status_code,
+            body=body,
+            headers=dict(resp.headers),
+            error=error,
         )
         return response
 
@@ -178,7 +187,11 @@ class Clump:
                 logger.trace("Successfully read response as text")
                 body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body, error=error
+            request_map=req_map,
+            status_code=status_code,
+            body=body,
+            headers=dict(resp.headers),
+            error=error,
         )
         return response
 
@@ -204,7 +217,11 @@ class Clump:
                 logger.trace("Successfully read response as text")
                 body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body, error=error
+            request_map=req_map,
+            status_code=status_code,
+            body=body,
+            headers=dict(resp.headers),
+            error=error,
         )
         return response
 
@@ -230,7 +247,11 @@ class Clump:
                 logger.trace("Successfully read response as text")
                 body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body, error=error
+            request_map=req_map,
+            status_code=status_code,
+            body=body,
+            headers=dict(resp.headers),
+            error=error,
         )
         return response
 
@@ -256,6 +277,10 @@ class Clump:
                 logger.trace("Successfully read response as text")
                 body = {"text": text}
         response = RequestResponse(
-            request_map=req_map, status_code=status_code, body=body, error=error
+            request_map=req_map,
+            status_code=status_code,
+            body=body,
+            headers=dict(resp.headers),
+            error=error,
         )
         return response
