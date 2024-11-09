@@ -1,6 +1,6 @@
-aiodns==3.1.1 ; python_version >= "3.10" and python_version < "4.0" \
-    --hash=sha256:1073eac48185f7a4150cad7f96a5192d6911f12b4fb894de80a088508c9b3a99 \
-    --hash=sha256:a387b63da4ced6aad35b1dda2d09620ad608a1c7c0fb71efa07ebb4cd511928d
+aiodns==3.2.0 ; python_version >= "3.10" and python_version < "4.0" \
+    --hash=sha256:62869b23409349c21b072883ec8998316b234c9a9e36675756e8e317e8768f72 \
+    --hash=sha256:e443c0c27b07da3174a109fd9e736d69058d808f144d3c9d56dbd1776964c5f5
 aiohappyeyeballs==2.4.3 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:75cf88a15106a5002a8eb1dab212525c00d1f4c0fa96e551c9fbe6f09a621586 \
     --hash=sha256:8a7a83727b2756f394ab2895ea0765a0a8c475e3c71e98d43d76f22b4b435572
