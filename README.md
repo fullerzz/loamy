@@ -1,8 +1,8 @@
 ![CI Workflow](https://github.com/fullerzz/zConcurrent/actions/workflows/ci.yml/badge.svg)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
 [![PyPI version](https://badge.fury.io/py/loamy.svg)](https://badge.fury.io/py/loamy)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](https://img.shields.io/badge/license-MIT-blue)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
 # Overview
 
@@ -79,7 +79,7 @@ for resp in responses:
 #### RequestMap Class
 
 ```python
-class RequestMap(msgspec.Struct):
+class RequestMap(BaseModel):
     url: str
     http_op: Literal["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
     body: dict | None = None
@@ -91,7 +91,7 @@ class RequestMap(msgspec.Struct):
 #### RequestResponse Class
 
 ```python
-class RequestResponse(msgspec.Struct):
+class RequestResponse(BaseModel):
     request_map: RequestMap
     status_code: int
     body: dict | None = None
