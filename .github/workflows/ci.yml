@@ -40,7 +40,7 @@ jobs:
         pip install uv==0.5.1
         uv venv
         source .venv/bin/activate
-        uv sync
+        uv sync --all-extras
     - name: Code linting
       run: |
         source .venv/bin/activate
