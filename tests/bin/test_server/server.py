@@ -1,21 +1,25 @@
-from blacksheep import Application, Request, Response, get, json, post
+from quart import Quart, jsonify, Response, Request
 
-app = Application()
+app = Quart(__name__)
 
 
-@get("/")
+@app.get("/")
 async def index() -> Response:
-    return json({"message": "Hello, world!"})
+    return jsonify({"message": "Hello, world!"})
 
 
-@post("/foo")
+@app.post("/foo")
 async def post_foo(request: Request) -> Response:
-    data = await request.json()
-    resp: Response = json(data)
-    resp.add_header(b"X-Test", b"Test")
+    data = await request.get_json()
+    resp: Response = jsonify(data)
+    resp.headers["X-Test"] = "Test"
     return resp
 
 
-@get("/exception")
+@app.get("/exception")
 async def mock_exception() -> Response:
     raise Exception("Mock exception")
+
+
+if __name__ == "__main__":
+    app.run()
