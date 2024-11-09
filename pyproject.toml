@@ -34,6 +34,13 @@ dev = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.uv]
+python-preference = "system"
+python-downloads = "manual"
+
+[tool.uv.pip]
+strict = true
+
 [tool.ruff]
 extend-exclude = ["tests"]
 line-length = 88
