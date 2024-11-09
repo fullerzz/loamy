@@ -40,7 +40,7 @@ class RequestResponse(BaseModel):
     status_code: int
     body: dict | None = None
     headers: dict[str, str] | None = None
-    error: Exception | None = None
+    error: BaseException | None = None
 
 
 class Clump:
