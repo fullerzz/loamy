@@ -146,7 +146,7 @@ wheels = [
 
 [[package]]
 name = "blacksheep"
-version = "2.0.7"
+version = "2.0.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
@@ -159,17 +159,17 @@ dependencies = [
     { name = "python-dateutil" },
     { name = "rodi" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/33/83/d96bbc907a8c34272b1ae052b6e95fd3f38329198fc8e6a9a3a790091cf5/blacksheep-2.0.7.tar.gz", hash = "sha256:ae192809c1e42de5a0d6230f1238d027641a8d889a4a9fb5349b7980f74afd88", size = 1172541 }
+sdist = { url = "https://files.pythonhosted.org/packages/71/14/d6459ad8267467a2d51984b819f5264493bdbd6f6af414baa6f99dd2ee37/blacksheep-2.0.6.tar.gz", hash = "sha256:8c188ee96c91985260907366274fba80df527bd1ee02be3781515a06db7933f3", size = 1171741 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0b/7f/50b1d37f7418d14687d896bd662f27b6d3892b7d5b47dae93bf59db2bc8f/blacksheep-2.0.7-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:7d707010d71f9a7d048966cac9f8e21eb772c7a04b54755ae9a2e51b3e888bea", size = 1767293 },
-    { url = "https://files.pythonhosted.org/packages/21/a6/dbc51a9b92ff645e8b23878c1c86ff2f5c3190070641394726f918e71a03/blacksheep-2.0.7-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b0ef73603ccbb08cb161078f174be059c7ab6881534899891b76a46afde81f00", size = 4434005 },
-    { url = "https://files.pythonhosted.org/packages/12/c8/ab532dfd0d5ae78811a83e3a2b12227f238e3097ef779c0230bbe814ee15/blacksheep-2.0.7-cp310-cp310-win_amd64.whl", hash = "sha256:dd97981fb7e9ee22416df14a17cb88307202e49d90ce5fdd9f99d531c3eb3c2a", size = 1690455 },
-    { url = "https://files.pythonhosted.org/packages/52/68/2854610aea9fe317df6675a27c9d286f5b1073b5eb903c93956e8f422f6e/blacksheep-2.0.7-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:676285158a3d3bdd77e5bf48805e6359d86ef718ad21895ad239c7f32b11e110", size = 2378373 },
-    { url = "https://files.pythonhosted.org/packages/02/13/55a7d82f3937e5da7f8d5487444f0c134c37d5b27e3f0d56825f9b0969bf/blacksheep-2.0.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bcee81f0238ee5c10c7fc4d45a8a49cd012188ab9756c695922aa79c73cd1f5c", size = 4725162 },
-    { url = "https://files.pythonhosted.org/packages/c7/cf/7b61f88592c9793746f603de0fe55b3364fc0ca35edf9ce4e77912e836a7/blacksheep-2.0.7-cp311-cp311-win_amd64.whl", hash = "sha256:aff0e2503c5fc7237475533d788153c01acaf4d00bb7a0a62d7fcb526ed6ec62", size = 1693640 },
-    { url = "https://files.pythonhosted.org/packages/8e/6f/05b6ac2820626d8124c5d055242c678252f630ea1755ee021e9f348415f2/blacksheep-2.0.7-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:36f5c7cd30b36bc076aed972ba68645acde0af59e6c2a5b6ab301bc27ec7a01e", size = 2345836 },
-    { url = "https://files.pythonhosted.org/packages/1c/3b/721bf625b7ccb3360b6fd95fc333cf044f01e3c6980fbce6022519bc59b5/blacksheep-2.0.7-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7d451f4c18d7af1852ee6cc52ab7a0bb0c435d1d6cd6c22d4238d229400c25b8", size = 5124462 },
-    { url = "https://files.pythonhosted.org/packages/e7/9e/e8b55a70b30b576397d9a48fceadf492c7a98c0dc171048be03976be7ecd/blacksheep-2.0.7-cp312-cp312-win_amd64.whl", hash = "sha256:fb2594c101241d4a983085667898a6f43024024d9722f8a3df16150f4bdd5d39", size = 1686440 },
+    { url = "https://files.pythonhosted.org/packages/ff/78/5e86d33f5253ec54df85568304573c345e212266cb1574ae660f7c4e1842/blacksheep-2.0.6-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:ae6a0b6c84b153b66bffab200c9704e744e1e22db0f668a54e2eed1b540c9620", size = 1766949 },
+    { url = "https://files.pythonhosted.org/packages/f3/00/d8b7ba2864b86222909c8859ebe1c48b291cf0a54ef3d8b29860ef86bd18/blacksheep-2.0.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e2b615bc8ad753c88034281b5058bf51c19ee627aa67a3223224da427ae7e081", size = 4433627 },
+    { url = "https://files.pythonhosted.org/packages/8a/16/95c52b42bbdd17cb570526c985510d94478bc53e5a7c97f957452138dcb2/blacksheep-2.0.6-cp310-cp310-win_amd64.whl", hash = "sha256:33494863518b094aba0e397173930d4788f79dbf0c8fafcff2c80737b8e49692", size = 1690118 },
+    { url = "https://files.pythonhosted.org/packages/8c/36/8ea85d2c18990bd3d39d46122753cf7d09120ffac461d1294c98f19b62e2/blacksheep-2.0.6-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:d8c01a224095cc58ffd36933bbab8a445415c298c99ef7bfe773c3a846b306b3", size = 2377973 },
+    { url = "https://files.pythonhosted.org/packages/45/58/c2e2f0c38eecda281bac5b796361f75dcae4d0af0941179c2c0ac1e7656b/blacksheep-2.0.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4e6513a6a8bd9df06a12dde00f1457af8058e07428f590de561bc4a73df22401", size = 4724869 },
+    { url = "https://files.pythonhosted.org/packages/6a/ad/359664e47409d5d55415f6deb89762ef4cfa525fe02b997c9d691a9b73ab/blacksheep-2.0.6-cp311-cp311-win_amd64.whl", hash = "sha256:cacc5149c50d3e484d526d659180d719671046960af7fe0db5cff0a08efc59c1", size = 1693312 },
+    { url = "https://files.pythonhosted.org/packages/8c/4c/6dd15ffe6ba8c9c825f97b982055cf94b1ad1c20cd1543b865b4e79c9faa/blacksheep-2.0.6-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:a5ebe9bfdf1c67f98291ffce15aafd2396a8bd19f1bc66513b015e7fd62c7b6a", size = 2345499 },
+    { url = "https://files.pythonhosted.org/packages/74/6d/99ca2d7178e4965134555d545d06b7ee1ff8828f3a780c425c9981a3af2b/blacksheep-2.0.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c130ac8087fb8f2be03385ed060894bab925ee27acb43e89f7cf939419e09e46", size = 5124145 },
+    { url = "https://files.pythonhosted.org/packages/67/2e/c4d1ae5e974feb6b361d0c951df5d59ad7fe7faec556e9eceda28fceb6a4/blacksheep-2.0.6-cp312-cp312-win_amd64.whl", hash = "sha256:4690700bcadc236c7958b5db45c4375da4d33ef753debd79c7d5c40874a5146b", size = 1686109 },
 ]
 
 [[package]]
@@ -664,7 +664,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "blacksheep", specifier = ">=2.0.7" },
+    { name = "blacksheep", specifier = "==2.0.6" },
     { name = "httpx", specifier = ">=0.27.2" },
     { name = "mypy", specifier = ">=1.13.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
