@@ -4,7 +4,7 @@ from typing import Literal
 
 import aiohttp
 from loguru import logger
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 # Disable the logger. If a consuming app wishes to see loamy's logs, they can enable() it again.
 logger.disable("loamy")
@@ -35,6 +35,8 @@ class RequestResponse(BaseModel):
     """
     Class containing information about the result of an HTTP request.
     """
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     request_map: RequestMap
     status_code: int
