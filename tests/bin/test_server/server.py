@@ -10,8 +10,7 @@ async def index() -> Response:
 
 @app.post("/foo")
 async def post_foo(request: Request) -> Response:
-    data = await request.get_json()
-    resp: Response = jsonify(data)
+    resp = jsonify({"foo": "bar"})
     resp.headers["X-Test"] = "Test"
     return resp
 
