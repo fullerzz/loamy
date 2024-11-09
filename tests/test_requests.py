@@ -49,6 +49,7 @@ def test_send_requests(request_map_collection: List[RequestMap]) -> None:
             assert "x-test" in response.headers
             assert "Test" == response.headers["x-test"]
 
+
 def test_send_requests_with_exceptions(
     request_map_collection: List[RequestMap],
     request_map_to_trigger_exception: RequestMap,

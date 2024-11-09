@@ -3,8 +3,8 @@ from json import JSONDecodeError
 from typing import Literal
 
 import aiohttp
-import msgspec
 from loguru import logger
+from pydantic import BaseModel, ConfigDict
 
 # Disable the logger. If a consuming app wishes to see loamy's logs, they can enable() it again.
 logger.disable("loamy")
@@ -19,7 +19,7 @@ except ModuleNotFoundError:
     logger.debug("Using asyncio for async operations")
 
 
-class RequestMap(msgspec.Struct):
+class RequestMap(BaseModel):
     """
     Class containing information about a single HTTP request to be sent.
     """
@@ -31,10 +31,12 @@ class RequestMap(msgspec.Struct):
     headers: dict[str, str] | None = None
 
 
-class RequestResponse(msgspec.Struct):
+class RequestResponse(BaseModel):
     """
     Class containing information about the result of an HTTP request.
     """
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     request_map: RequestMap
     status_code: int

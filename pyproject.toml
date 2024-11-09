@@ -9,7 +9,7 @@ dependencies = [
     "aiodns>=3.2.0",
     "aiohttp>=3.10.10",
     "loguru>=0.7.2",
-    "msgspec>=0.18.6",
+    "pydantic>=2.9.2",
 ]
 
 [project.optional-dependencies]
@@ -19,7 +19,6 @@ uvloop = [
 
 [dependency-groups]
 dev = [
-    "blacksheep==2.0.6",
     "httpx>=0.27.2",
     "mypy>=1.13.0",
     "pip-audit>=2.7.3",
@@ -28,6 +27,7 @@ dev = [
     "pytest-asyncio>=0.24.0",
     "ruff>=0.7.3",
     "uvicorn>=0.32.0",
+    "quart>=0.19.8",
 ]
 
 [build-system]
